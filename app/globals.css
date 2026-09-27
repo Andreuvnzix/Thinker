@@ -1,0 +1,184 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Daily OS design tokens — "The Ledger, warmed".
+ * See DESIGN_SYSTEM.md before adding or changing any token here.
+ * Never introduce a color/radius value inline in a component.
+ */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface-raised: var(--surface-raised);
+  --color-accent-signal: var(--accent-signal);
+  --color-accent-signal-foreground: var(--accent-signal-foreground);
+  --color-source-1: var(--source-1);
+  --color-source-2: var(--source-2);
+  --color-source-3: var(--source-3);
+  --color-source-4: var(--source-4);
+  --color-source-5: var(--source-5);
+
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-public-sans);
+  --font-mono: var(--font-plex-mono);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+
+  --text-display: 1.75rem;
+  --text-title: 1.25rem;
+  --text-body: 0.9375rem;
+  --text-body-sm: 0.8125rem;
+  --text-micro: 0.6875rem;
+  --text-time: 0.8125rem;
+}
+
+:root {
+  /* Warm paper surface + warm near-black ink — never stark white/black. */
+  --background: oklch(0.98 0.0075 85);
+  --foreground: oklch(0.22 0.012 55);
+  --surface-raised: oklch(0.995 0.005 85);
+
+  --card: var(--background);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-raised);
+  --popover-foreground: var(--foreground);
+
+  --primary: var(--foreground);
+  --primary-foreground: var(--background);
+  --secondary: oklch(0.95 0.008 85);
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.95 0.008 85);
+  --muted-foreground: oklch(0.52 0.014 55);
+  --accent: oklch(0.94 0.009 80);
+  --accent-foreground: var(--foreground);
+
+  /* The one functional accent: urgency, overdue, the "now" line. Never decorative. */
+  --accent-signal: oklch(0.56 0.165 40);
+  --accent-signal-foreground: oklch(0.985 0.01 85);
+  --destructive: oklch(0.58 0.2 25);
+
+  --border: oklch(0.89 0.01 70);
+  --input: var(--border);
+  --ring: oklch(0.56 0.1 40 / 0.5);
+
+  /* Capped 5-hue set for calendar-source / label dot-coding only. */
+  --source-1: oklch(0.62 0.09 150);
+  --source-2: oklch(0.6 0.07 250);
+  --source-3: oklch(0.7 0.11 85);
+  --source-4: oklch(0.58 0.08 320);
+  --source-5: oklch(0.55 0.02 250);
+
+  --radius: 8px;
+
+  --sidebar: var(--background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--accent-signal);
+  --sidebar-primary-foreground: var(--accent-signal-foreground);
+  --sidebar-accent: var(--secondary);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+}
+
+.dark {
+  --background: oklch(0.19 0.01 55);
+  --foreground: oklch(0.93 0.01 80);
+  --surface-raised: oklch(0.24 0.011 55);
+
+  --card: var(--background);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-raised);
+  --popover-foreground: var(--foreground);
+
+  --primary: var(--foreground);
+  --primary-foreground: var(--background);
+  --secondary: oklch(0.27 0.012 55);
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.27 0.012 55);
+  --muted-foreground: oklch(0.68 0.012 70);
+  --accent: oklch(0.29 0.013 55);
+  --accent-foreground: var(--foreground);
+
+  --accent-signal: oklch(0.68 0.17 40);
+  --accent-signal-foreground: oklch(0.15 0.01 55);
+  --destructive: oklch(0.7 0.19 22);
+
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.68 0.12 40 / 0.5);
+
+  --source-1: oklch(0.72 0.1 150);
+  --source-2: oklch(0.7 0.08 250);
+  --source-3: oklch(0.78 0.12 85);
+  --source-4: oklch(0.68 0.09 320);
+  --source-5: oklch(0.66 0.02 250);
+
+  --sidebar: var(--background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--accent-signal);
+  --sidebar-primary-foreground: var(--accent-signal-foreground);
+  --sidebar-accent: var(--secondary);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+    height: 100%;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .font-mono-time {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
