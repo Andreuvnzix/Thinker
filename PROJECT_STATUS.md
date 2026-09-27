@@ -4,7 +4,7 @@ _Last updated: 2026-09-27_
 
 ## Current phase
 
-**Phase 6 (Today) complete; Phases 5, 7, 8, 15 partially complete.** The app runs end-to-end in local demo mode: sign-in is stubbed out, but Today/Tasks/Calendar/Inbox/Settings are all real, interactive, and visually reviewed on desktop and mobile (375–430px) in both light and dark theme.
+**Phase 6 (Today) complete; Phases 5, 7, 8, 15 partially complete. Supabase is now live** (project `goznihyrnosucammlcbp`, schema applied 2026-09-27). Today/Tasks/Calendar/Inbox/Settings are all real, interactive, and visually reviewed on desktop and mobile (375–430px) in both light and dark theme, built and QA'd against local fixture data — now that Supabase is connected, the proxy enforces real auth, and **sign-in is blocked until the Google provider is enabled in Supabase** (see Blocked, below). Until then, local development against real data isn't possible; fixture mode is no longer reachable either, since demo mode was only a stand-in for *no* Supabase configuration.
 
 ## Completed
 
@@ -34,19 +34,20 @@ Phases 9–14 (real Google Calendar/Gmail sync, Daily Briefing, persisting an ac
 
 Nothing in the codebase is blocked — everything buildable without external credentials has been built. Two things require the user to create accounts/credentials before the corresponding features can go live:
 
-### Supabase
+### Supabase — done
 
-1. Create a project at [supabase.com](https://supabase.com).
-2. Copy `.env.example` → `.env.local`, fill in `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`.
-3. Apply `supabase/migrations/20260927000000_init.sql` (via `supabase db push` or pasting into the SQL editor).
-4. In Supabase Auth settings, enable the Google provider.
+1. ~~Create a project at supabase.com~~ — done (`goznihyrnosucammlcbp`, region eu-central-1).
+2. ~~Fill in `.env.local`~~ — done (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` set; `SUPABASE_SERVICE_ROLE_KEY` still blank — only needed for future cron sync jobs).
+3. ~~Apply the migration~~ — done via `supabase db push` against the session pooler (the direct `db.<ref>.supabase.co` host is IPv6-only and wasn't reachable from the dev machine — use the pooler connection string for any future CLI/db work).
+4. **Not done — currently blocking sign-in entirely**: enable the Google provider in Supabase Auth settings (Authentication → Providers → Google), which itself needs a Google Cloud OAuth Client ID/Secret pasted in. See Google Cloud OAuth below — its first 3 steps are a prerequisite for this, not just for Calendar/Gmail sync.
 
-### Google Cloud OAuth
+### Google Cloud OAuth — not started (now the only thing blocking sign-in)
 
 1. Create a project in Google Cloud Console, enable the Calendar API and Gmail API.
 2. Create an OAuth 2.0 Client ID (Web application).
-3. Add `${NEXT_PUBLIC_SITE_URL}/auth/callback` as an authorized redirect URI, and register the same client in Supabase Auth's Google provider config.
-4. Fill in `GOOGLE_OAUTH_CLIENT_ID` / `GOOGLE_OAUTH_CLIENT_SECRET` in `.env.local`.
+3. Add `https://goznihyrnosucammlcbp.supabase.co/auth/v1/callback` as an authorized redirect URI in the Google Cloud client (this is Supabase's own callback, required for step 4 below — separate from this app's `${NEXT_PUBLIC_SITE_URL}/auth/callback`, which handles the redirect *after* Supabase finishes the OAuth exchange).
+4. Paste that Client ID/Secret into Supabase → Authentication → Providers → Google, and enable it. This is what unblocks `/login` — confirmed by testing: the button correctly reaches Supabase Auth and fails with `"Unsupported provider: provider is not enabled"`, i.e. everything on this app's side is wired correctly.
+5. Fill in `GOOGLE_OAUTH_CLIENT_ID` / `GOOGLE_OAUTH_CLIENT_SECRET` in `.env.local` (same client, reused for the incremental-consent Calendar/Gmail data-access flow — see INTEGRATIONS.md).
 
 ### Vercel (deployment, Phase 22 — not started)
 
