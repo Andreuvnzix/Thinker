@@ -8,6 +8,9 @@ import { formatClock } from "@/lib/utils/time";
 
 const SOURCE_HUES = ["source-1", "source-2", "source-3", "source-4", "source-5"] as const;
 
+/** Width reserved for the hour-label gutter. Event blocks and dividers start after it. */
+const GUTTER = 48;
+
 function hueForCalendar(calendarName: string | null): string {
   const key = calendarName ?? "default";
   let hash = 0;
@@ -38,24 +41,31 @@ export function Timeline({ events }: { events: CalendarEvent[] }) {
   }
 
   return (
-    <div className="relative pl-14" style={{ height }}>
+    <div className="relative" style={{ height }}>
       {marks.map((minutes) => (
-        <div
-          key={minutes}
-          className="absolute left-0 flex w-full items-start gap-2 border-t border-border/70"
-          style={{ top: (minutes - range.startMinutes) * 1.1 }}
-        >
-          <span className="font-mono-time -ml-14 w-11 shrink-0 text-right text-[11px] text-muted-foreground">
+        <div key={minutes} className="absolute inset-x-0" style={{ top: (minutes - range.startMinutes) * 1.1 }}>
+          <span
+            className="font-mono-time absolute left-0 top-[-6px] text-right text-[11px] text-muted-foreground"
+            style={{ width: GUTTER - 8 }}
+          >
             {String(Math.floor(minutes / 60) % 24).padStart(2, "0")}:00
           </span>
+          <div className="absolute right-0 border-t border-border/70" style={{ left: GUTTER }} />
         </div>
       ))}
 
       {now !== null && (
-        <div className="absolute left-0 z-10 flex w-full items-center gap-1" style={{ top: now }}>
-          <span className="-ml-14 w-11 shrink-0 text-right text-[11px] font-medium text-accent-signal">now</span>
-          <div className="h-px flex-1 bg-accent-signal" />
-          <div className="h-1.5 w-1.5 rounded-full bg-accent-signal" />
+        <div className="absolute inset-x-0 z-10" style={{ top: now }}>
+          <span
+            className="absolute left-0 top-[-7px] text-right text-[11px] font-medium text-accent-signal"
+            style={{ width: GUTTER - 8 }}
+          >
+            now
+          </span>
+          <div className="absolute right-2 flex items-center" style={{ left: GUTTER }}>
+            <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent-signal" />
+            <div className="h-px flex-1 bg-accent-signal" />
+          </div>
         </div>
       )}
 
@@ -65,8 +75,8 @@ export function Timeline({ events }: { events: CalendarEvent[] }) {
         return (
           <div
             key={event.id}
-            className="absolute left-2 right-0 overflow-hidden rounded-md border-l-2 bg-secondary/60 px-3 py-1.5"
-            style={{ top: style.top, height: style.height, borderLeftColor: `var(--${hue})` }}
+            className="absolute right-1 overflow-hidden rounded-md border-l-2 bg-secondary/60 px-3 py-1.5"
+            style={{ top: style.top, height: style.height, left: GUTTER, borderLeftColor: `var(--${hue})` }}
           >
             <div className="flex items-baseline justify-between gap-2">
               <p className="truncate text-body-sm font-medium">{event.title}</p>
